@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Password Generator</title>
+    <link rel="stylesheet" href="/pass_gen.css">
+    <style>
+        /* Reset default spacing and use a friendly font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container card */
+        #container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Labels and inputs spacing */
+        #start,
+        #middle,
+        #end {
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-left: 8px;
+            margin-right: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Input fields */
+        input[type="number"],
+        input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            background-color: #f7f7f7;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 16px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Warning message (if you uncomment it) */
+        #warning {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Checkbox alignment */
+        #middle input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-right: 6px;
+            margin-top: 10px;
+        }
+
+        #middle label {
+            margin-right: 20px;
+            font-size: 15px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="start">
+            <label for="text">Enter the length of the Password: </label>
+            <input type="number" min="1" id="lengthofPass" value="1">
+        </div>
+    <div id="middle">
+    <p>Select which should be used in your password</p>
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="upperCase" name="password" checked> Upper Case</label>
+            <label><input type="checkbox" id="lowerCase" name="password" checked> Lower Case</label>
+            <label><input type="checkbox" id="numbers" name="password" checked> Numbers</label>
+            <label><input type="checkbox" id="symbols" name="password" checked> Symbols</label>
+        </div>
+    </div>
+        <button onclick="generatePass()" id="generate">Generate</button>
+        <div id="end">
+            <input type="text" id="passwordGenerator" readonly>
+            <button onclick="copyPass()">Copy Passowrd</button>
+        </div>
+        <!-- <p id="warning"></p> -->
+    </div>
+    <script>
+        function generatePass() {
+        const passLength = Number(document.getElementById("lengthofPass").value);
+
+        const useUpper = document.getElementById("upperCase").checked;
+        const useLower = document.getElementById("lowerCase").checked;
+        const useNumbers = document.getElementById("numbers").checked;
+        const useSymbols = document.getElementById("symbols").checked;
+
+        const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+        const numberChars = "0123456789";
+        const symbolChars = "`~!@#$%^&*()-_=+[{]}\\|;:',<.>/?";
+        
+        if (!useUpper && !useLower && !useNumbers && !useSymbols) {
+            alert("⚠️ Please select at least one character type.");
+            return;
+        }
+
+        let allowedChars = "";
+        let password = "";
+        
+        if (useUpper) allowedChars += upperChars;
+        if (useLower) allowedChars += lowerChars;
+        if (useNumbers) allowedChars += numberChars;
+        if (useSymbols) allowedChars += symbolChars;
+        
+        
+        for (let i = 0; i < passLength; i++) {
+            const randomIndex = Math.floor(Math.random() * allowedChars.length);
+            password += allowedChars[randomIndex];
+        }
+        
+        document.getElementById("passwordGenerator").value = password;
+    }
+
+    function copyPass() {
+        const passwordField = document.getElementById("passwordGenerator");
+
+        passwordField.select();
+        passwordField.setSelectionRange(0, 99999);
+
+        document.execCommand("copy");
+
+        alert("Password copied to clipboard!");
+    }
+    </script>
+</body>
+</html>
